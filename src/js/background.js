@@ -29,6 +29,7 @@ let hasAPIs = chrome.webRequest;
  */
 chrome.browserAction.onClicked.addListener((tab) => {
 
+    // debugger;
     debug = !debug;
     chrome.browserAction.setTitle({
         title: debug ? 'Sidecar Debug: ON' : 'Sidecar Debug: OFF'
@@ -40,7 +41,9 @@ chrome.browserAction.onClicked.addListener((tab) => {
         text: debug ? 'ON' : ''
     });
 
-    chrome.tabs.update(tab.id, {url: tab.url, selected: tab.selected}, null);
+    // chrome.tabs.update(tab.id, {url: tab.url, selected: tab.selected}, null);
+    chrome.tabs.update(tab.id, {url: tab.url, active: true});
+    chrome.tabs.reload();
 
     // webRequest handlers changed (solves caching issues)
     hasAPIs && chrome.webRequest.handlerBehaviorChanged();
