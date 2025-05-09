@@ -14,7 +14,7 @@
 
     let s = document.createElement('script');
     s.type = 'text/javascript';
-    s.src = chrome.extension.getURL(scriptFiles[i]);
+    s.src = chrome.runtime.getURL(scriptFiles[i]);
 
     $body.append(s);
   }
