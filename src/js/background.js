@@ -3,16 +3,15 @@
  */
 
 //Handle request from devtools
-chrome.extension.onConnect.addListener(function(port) {
-
-    //Listening to the extension page.
+chrome.runtime.onConnect.addListener(function(port) {
+    // Listening to the extension page.
     port.onMessage.addListener(function(message) {
         // Sending to the content script.
         chrome.tabs.sendMessage(message.tabId, message);
     });
 
     // Listening to the content script messages.
-    chrome.runtime.onMessage.addListener(function(message,sender,sendResponse) {
+    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         // Sending to the extension page.
         port.postMessage(message);
     });
@@ -27,25 +26,18 @@ let hasAPIs = chrome.webRequest;
 /**
  * Responds to clicks on the extension's icon. Toggles debug mode.
  */
-chrome.browserAction.onClicked.addListener((tab) => {
-
-    // debugger;
+chrome.action.onClicked.addListener((tab) => {
     debug = !debug;
-    chrome.browserAction.setTitle({
+    chrome.action.setTitle({
         title: debug ? 'Sidecar Debug: ON' : 'Sidecar Debug: OFF'
     });
-    // chrome.browserAction.setIcon({
-    //     path: debug ? 'icon-on.png' : 'icon-off.png'
-    // });
-    chrome.browserAction.setBadgeText({
+    chrome.action.setBadgeText({
         text: debug ? 'ON' : ''
     });
 
-    // chrome.tabs.update(tab.id, {url: tab.url, selected: tab.selected}, null);
     chrome.tabs.update(tab.id, {url: tab.url, active: true});
     chrome.tabs.reload();
 
-    // webRequest handlers changed (solves caching issues)
     hasAPIs && chrome.webRequest.handlerBehaviorChanged();
 });
 
@@ -58,8 +50,9 @@ hasAPIs && chrome.webRequest.onCompleted.addListener((details) => {
         return;
     }
 
-    chrome.tabs.executeScript(details.tabId, {
-        file: 'js/debug-mode-injector.js',
+    chrome.scripting.executeScript({
+        target: {tabId: details.tabId},
+        files: ['js/debug-mode-injector.js']
     });
 
 }, {urls: ['*://*/*/sidecar.js*', '*://*/*/sidecar.min.js*']});
