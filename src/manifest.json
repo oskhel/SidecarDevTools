@@ -1,28 +1,32 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "Sidecar Debugger Tool",
-    "version": "0.2",
-    "description": "Sidecar Debugger Tool extension helps you debugging Sugar7, for a better productivity and faster development.",
+    "version": "0.3",
+    "description": "Sidecar Debugger Tool extension helps you debugging Sugar 7 and upward, for a better productivity and faster development.",
 
     "icons": {
         "128": "img/sugarcube.png"
     },
 
-    "browser_action": {
+    "action": {
         "default_icon": "img/sugarcube.png"
     },
 
     "devtools_page": "html/devtools.html",
 
     "permissions": [
-        "webRequest",
+        "scripting",
+        "tabs",
+        "webRequest"
+    ],
+    "host_permissions": [
+        "*://*/*",
         "*://*/*/sidecar.js*",
-        "*://*/*/sidecar.min.js*",
-        "tabs"
+        "*://*/*/sidecar.min.js*"
     ],
 
     "background": {
-        "scripts": ["js/background.js"]
+        "service_worker": "js/background.js"
     },
 
     "content_scripts": [
@@ -38,11 +42,15 @@
     ],
 
     "web_accessible_resources": [
-        "js/inject/sidecar.debug.js"
+        {
+            "resources": ["js/inject/sidecar.debug.js"],
+            "matches": ["<all_urls>"]
+        }
     ],
 
-    "minimum_chrome_version": "50",
-
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
-
+    "minimum_chrome_version": "130",
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self';",
+        "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
+    }
 }
