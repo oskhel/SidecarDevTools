@@ -38,6 +38,7 @@ chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.update(tab.id, {url: tab.url, active: true});
     chrome.tabs.reload();
 
+    // webRequest handlers changed (solves caching issues)
     hasAPIs && chrome.webRequest.handlerBehaviorChanged();
 });
 
