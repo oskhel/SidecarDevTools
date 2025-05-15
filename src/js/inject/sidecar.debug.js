@@ -272,6 +272,10 @@
                 return;
             }
 
+            if (_.isUndefined(_components[this.cid])) {
+                _.bind(Sidecar.Debug.prototype._onHookLayoutInitialize, this)();
+            }
+
             this.$el.attr('data-debug-cid', this.cid);
             _components[this.cid].renderCount = _components[this.cid].renderCount ? ++_components[this.cid].renderCount : 1;
             var performance = Array.prototype.slice.call(arguments, -1).pop();
@@ -295,6 +299,10 @@
         Debug.prototype._onHookViewRender = function() {
             if (this.disposed) {
                 return;
+            }
+
+            if (_.isUndefined(_components[this.cid])) {
+                _.bind(Sidecar.Debug.prototype._onHookViewInitialize, this)();
             }
 
             this.$el.attr('data-debug-cid', this.cid);
@@ -340,6 +348,10 @@
         Debug.prototype._onHookFieldRender = function() {
             if (this.disposed) {
                 return;
+            }
+
+            if (_.isUndefined(_components[this.cid])) {
+                _.bind(Sidecar.Debug.prototype._onHookFieldInitialize, this)();
             }
 
             var parent = this.parent ? 'parent' : 'view';
